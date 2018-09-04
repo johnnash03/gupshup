@@ -1,21 +1,27 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import { connect } from "react-redux";
+import UsersList from './containers/Users';
+import Chat from './containers/Chat';
 import './App.css';
 
 class App extends Component {
+  state = {
+    currUser: null
+  }
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.currUser) {
+      this.setState({ currUser: nextProps.currUser });
+    }
+  }
+
   render() {
-    return (
-      <div className="App">
-        <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h1 className="App-title">Welcome to React</h1>
-        </header>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
+    return this.state.currUser
+      ? <Chat />
+      : <UsersList />;
   }
 }
 
-export default App;
+const mapStateToProps = ({ users }) => ({
+  currUser: users.currUser
+});
+export default connect(mapStateToProps, {})(App);
